@@ -11,8 +11,17 @@ logger = logging.getLogger(__name__)
 
 def train_model(model, train_dataset, val_dataset, device, patience=10):
     """
-    Trains the model on train_dataset and uses val_dataset for validation
-    at the end of each epoch. Early stopping based on validation loss.
+    Trains a PyTorch model using train_dataset, validating after each epoch. Employs early stopping based on validation loss.
+
+    Args:
+        model (nn.Module): PyTorch model to train.
+        train_dataset (Dataset): Training dataset.
+        val_dataset (Dataset): Validation dataset for early stopping.
+        device (torch.device): Device (CPU/GPU) to run the training on.
+        patience (int, optional): Number of epochs to wait for improvement before stopping. Defaults to 10.
+
+    Returns:
+        nn.Module: Model with the best validation performance.
     """
 
     logger.info(f"Starting training with early stopping (patience={patience})...")

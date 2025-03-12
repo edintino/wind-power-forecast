@@ -9,21 +9,21 @@ logger = logging.getLogger(__name__)
 
 def load_and_preprocess_data():
     """
-    Reads the CSV file specified in settings, applies time-based reindexing,
-    computes additional features, merges weather data, and returns a prepared DataFrame.
+    Reads the CSV file specified in settings, preprocesses the data, and prepares it for modeling.
 
-    The following transformations are applied:
-        1. Reading & parsing raw data into a DataFrame.
-        2. Reindexing to ensure a regular time series.
-        3. Flagging cut-in speed for the turbine.
+    The preprocessing pipeline includes:
+        1. Loading and parsing raw turbine data into a DataFrame.
+        2. Reindexing data to maintain regular intervals as specified by settings.
+        3. Calculating turbine cut-in speed and generating binary flags.
         4. Engineering time-based features (week, month, hour, season, day/night).
-        5. Merging external temperature data via meteostat.
-        6. Tracking imputed rows, shifting target by one step.
-        7. Generating delta (change) features.
-        8. One-hot encoding categorical features.
+        5. Fetching and merging external temperature data using Meteostat.
+        6. Tracking imputed rows and shifting the target variable for forecasting.
+        7. Creating delta (change) features to capture temporal dynamics.
+        7. Handling missing values with forward-fill imputation.
+        8. One-hot encoding categorical features (e.g., seasons).
 
     Returns:
-        pd.DataFrame: A preprocessed DataFrame ready for modeling.
+        pd.DataFrame: Fully prepared DataFrame suitable for modeling.
     """
     logger.info(f"Reading data file: {s.DATA_FILE}")
     df = pd.read_csv(
@@ -102,13 +102,13 @@ def load_and_preprocess_data():
 
 def get_season(month):
     """
-    Returns the season name for a given month integer.
+    Maps a month integer to its corresponding season.
 
     Args:
-        month (int): Numeric month (1-12).
+        month (int): Month number (1-12).
 
     Returns:
-        str: Season name ("winter", "spring", "summer", or "autumn").
+        str: Season ("winter", "spring", "summer", or "autumn").
     """
     return {
         12: "winter", 1: "winter", 2: "winter",
@@ -118,14 +118,14 @@ def get_season(month):
 
 def is_day_or_night(dt, location):
     """
-    Determines whether a given timezone-aware datetime is daytime or nighttime.
+    Determines if the given datetime is during the day or night at a specified location.
 
     Args:
-        dt (pd.Timestamp): Timezone-naive timestamp to localize.
-        location (astral.LocationInfo): Astral location information used to calculate sunrise/sunset.
+        dt (pd.Timestamp): Naive datetime object to localize.
+        location (astral.LocationInfo): Geographical location for sunrise/sunset calculations.
 
     Returns:
-        int: 0 if it's daytime, 1 if it's nighttime.
+        int: 0 for day, 1 for night.
     """
     dt_local = dt.tz_localize(s.TIMEZONE)
     s_obj = sun(location.observer, date=dt_local)
