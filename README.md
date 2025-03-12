@@ -9,7 +9,7 @@ This project implements an advanced wind energy forecasting solution leveraging 
 - **Framework:** PyTorch
 - **Data Sources:**
   - Historical turbine data (active power, wind speed, theoretical power) [(available on Kaggle)](https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset)
-  - Meteorological data via Meteostat
+  - Meteorological data via Meteostat [(location assumption based on the discussions)](https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset/discussion/86526)
   - Astronomical calculations for day/night classification using Astral
 
 ## Technical Details and Implementation
@@ -56,9 +56,9 @@ This project implements an advanced wind energy forecasting solution leveraging 
   - Device: CUDA-enabled GPU (fallback to CPU)
 
 - **Performance Metrics**:
-  - Final Training Loss (MSE): 0.000923
+  - Final Training Loss (MSE): 0.000901
   - **R² Score**: 0.983 (indicating excellent predictive capability)
-  - **Root Mean Squared Error (RMSE)**: 186.055
+  - **Root Mean Squared Error (RMSE)**: 195.668
 
 ### Interactive Visualization
 
@@ -70,8 +70,8 @@ This project implements an advanced wind energy forecasting solution leveraging 
 ## Project Achievements and Highlights
 
 - Achieved high forecasting accuracy:
-  - **R² Score**: 0.985
-  - **RMSE**: 186.055 (significantly better compared to XGBoost model's RMSE of ~523 using the same features)
+  - **R² Score**: 0.983
+  - **RMSE**: 195.668 (significantly better compared to XGBoost model's RMSE of ~523 using the same features)
 - Successfully integrated meteorological and astronomical datasets, enhancing predictive power.
 - Implemented robust missing data management, increasing model reliability in real-world scenarios.
 - Introduced effective gradient clipping, mitigating potential exploding gradient issues typical in transformer models.

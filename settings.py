@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 # -----------------------
 DATA_FILE = "./data/T1.csv"
 FREQ = "10T"  # frequency for date range reindexing
-LOCATION_NAME = "Yalova"#"Izmir"
+LOCATION_NAME = "Yalova"
 REGION_NAME = "Turkey"
 TIMEZONE = "Europe/Istanbul"
 LAT, LON = 40.58545, 28.99035
