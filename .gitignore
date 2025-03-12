@@ -1,0 +1,15 @@
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore CatBoost info directory
+catboost_info/
+
+# Ignore all Jupyter Notebook files
+*.ipynb
+.ipynb_checkpoints/
+
+# Ignore data folder contents but keep the folder
+/data/*
