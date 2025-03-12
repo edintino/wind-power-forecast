@@ -13,3 +13,6 @@ catboost_info/
 
 # Ignore data folder contents but keep the folder
 /data/*
+
+# Ignore html plots
+*.html

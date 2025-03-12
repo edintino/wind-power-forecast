@@ -37,7 +37,7 @@ PATIENCE = 25
 HIDDEN_SIZE = 64
 OUTPUT_SIZE = 1
 NUM_HEADS = 4
-NUM_LAYERS = 3
+NUM_LAYERS = 2
 DROPOUT = 0.15
 
 # -----------------------
