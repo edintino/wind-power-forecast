@@ -1,20 +1,24 @@
-# Wind Power Forecasting with Temporal Fusion Transformer (TFT)
+# Wind Power Forecasting with TFT, LSTM, and XGBoost
 
 ## Project Overview
 
-This project implements an advanced wind energy forecasting solution leveraging deep learning techniques to accurately predict wind turbine active power generation. The PyTorch-based model employs the Transformer-based Temporal Fusion Transformer (TFT) architecture, optimized for robust time-series forecasting. It incorporates extensive feature engineering, standard scaling of features, weather data integration, gradient clipping for training stability, and thorough data preprocessing.
+This project implements a comparative wind energy forecasting solution using three distinct machine learning approaches to predict wind turbine active power generation:
 
-## Key Highlights
-- **Model:** Temporal Fusion Transformer (TFT)
-- **Framework:** PyTorch
-- **Data Sources:**
-  - Historical turbine data (active power, wind speed, theoretical power) [(available on Kaggle)](https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset)
-  - Meteorological data via Meteostat [(location assumption based on the discussions)](https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset/discussion/86526)
-  - Astronomical calculations for day/night classification using Astral
+- **Temporal Fusion Transformer (TFT)** – Transformer-based deep learning model for complex time-series relationships.
+- **Long Short-Term Memory (LSTM)** – Recurrent neural network effective for sequence modeling.
+- **XGBoost** – Gradient boosting tree-based model ideal for structured data and regression tasks.
 
-## Technical Details and Implementation
+The project incorporates advanced feature engineering, external meteorological data integration, and robust data preprocessing to enhance predictive accuracy and reliability.
 
-### Data Preparation and Engineering
+---
+
+## Data Sources
+
+- **Historical Turbine SCADA data**: [Wind Turbine Dataset (Kaggle)](https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset)
+- **Meteorological data**: Integrated via Meteostat [(location assumption based on the discussions)](https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset/discussion/86526)
+- **Astronomical calculations**: Day/night differentiation using Astral
+
+## Data Preparation and Feature Engineering
 
 - **Dataset**: Historical wind turbine data recorded at 10-minute intervals.
 - **Datetime Handling**: Data is sorted, indexed, and resampled to maintain completeness.
@@ -26,68 +30,64 @@ This project implements an advanced wind energy forecasting solution leveraging 
 - **Missing Data Handling**: Missing values are forward-filled, and their locations indicated via an imputation mask.
 - **Derived Features**:
   - Computed delta values (changes in temperature, wind speed, wind power) to enhance trend detection.
-
-### Data Scaling and Normalization
-
 - **Feature Scaling**: Applied standard scaling (StandardScaler) to normalize feature distributions for improved model convergence.
 - **Target Scaling**: The target variable (active power) is min-max scaled by dividing by 3600, representing the theoretical maximum output, ensuring values range between 0 and 1 for optimal model training.
 
-### Model Architecture: Temporal Fusion Transformer (TFT)
+## Modeling Approaches
 
-- **Model Type**: Transformer-based model optimized specifically for accurate time-series forecasting.
-- **Key Components**:
-  - **Positional Encoding**: Incorporates temporal information into the model.
-  - **Transformer Encoder Layers**: 3 layers with 4 attention heads each, effectively capturing complex temporal relationships.
-  - **Gradient Clipping**: Implemented to prevent exploding gradients during training, enhancing training stability.
-  - **Dropout Regularization**: Reduces overfitting and improves generalization.
+### 1. Temporal Fusion Transformer (TFT)
 
-### Data Handling for Model
+- Transformer architecture optimized for time-series forecasting.
+- Captures complex, non-linear relationships through attention mechanisms.
+- Implements gradient clipping and dropout regularization to improve training stability and generalization.
 
-- **Sliding Window Technique**: Utilizes sequences of 45 time-steps (7.5 hours) to predict one step ahead (10-minute forecast horizon).
-- **PyTorch DataLoaders**: Efficient batching (batch size: 64) for training stability.
-- **Train/Validation/Test Split**: Chronological split with 80% training, 10% validation, and 10% test data to realistically evaluate performance.
+### 2. Long Short-Term Memory (LSTM)
 
-### Model Training and Evaluation
+- Recurrent neural network tailored for sequential data modeling.
+- Suitable for capturing temporal dependencies.
+- Simpler architecture compared to TFT, beneficial for benchmarking and faster training.
 
-- **Training Procedure**:
-  - Optimizer: Adam
-  - Loss Function: Mean Squared Error (MSE)
-  - Gradient Clipping: Applied gradient clipping to prevent exploding gradients during training.
-  - Device: CUDA-enabled GPU (fallback to CPU)
+### 3. XGBoost Regressor
 
-- **Performance Metrics**:
-  - Final Training Loss (MSE): 0.000901
-  - **R² Score**: 0.983 (indicating excellent predictive capability)
-  - **Root Mean Squared Error (RMSE)**: 195.668
+- Tree-based gradient boosting algorithm.
+- Non-neural, highly effective for structured data.
+- Efficiently handles feature interactions, robust to missing values, and suitable for baseline comparison.
 
-### Interactive Visualization
+## Data Preparation for the Model
 
-- **Visualization**: Interactive Plotly graph clearly shows predicted vs. actual wind turbine active power.
-- **Filtered Visualization**: Excludes data points with imputed missing values for clear evaluation.
+- **Sliding Window**: Sequences of historical data (`SEQ_LENGTH = 45`) used to forecast one step ahead (`FORECAST_HORIZON = 1`).
+- **Train/Validation/Test Split**: Chronologically split into 80% training, 10% validation, 10% testing to ensure realistic forecasting evaluation.
 
-[View Interactive Plot](forecast.html)
+## Model Training and Evaluation
 
-## Project Achievements and Highlights
+- **Training**:
+  - Neural networks (TFT, LSTM) trained with Adam optimizer, MSE loss, and early stopping based on validation performance.
+- **Evaluation Metrics**:
+  - **R² Score**
+  - **Root Mean Squared Error (RMSE)**
 
-- Achieved high forecasting accuracy:
-  - **R² Score**: 0.983
-  - **RMSE**: 195.668 (significantly better compared to XGBoost model's RMSE of ~523 using the same features)
-- Successfully integrated meteorological and astronomical datasets, enhancing predictive power.
-- Implemented robust missing data management, increasing model reliability in real-world scenarios.
-- Introduced effective gradient clipping, mitigating potential exploding gradient issues typical in transformer models.
+Comparison results:
+
+| Model   | R² Score   | RMSE        |
+|---------|------------|-------------|
+| TFT     |   0.988    |   161.865   |
+| LSTM    | **0.990**  | **151.023** |
+| XGBoost |   0.934    |   385.391   |
+
+## Visualization
+
+- Interactive visualization using Plotly compares actual vs. predicted active power (below screenshots are provided)
+
+![TFT](tft.png)
+![LSTM](lstm.png)
+![XGBOOST](xgboost.png)
 
 ## Why This Matters
 
-Accurate forecasting of wind turbine active power significantly enhances renewable energy system management, operational efficiency, and decision-making capabilities. Utilizing advanced deep learning approaches like TFT improves reliability and precision of forecasts, crucial for real-time energy management and market decisions.
+Accurate wind power forecasting enhances renewable energy management, reducing uncertainty in operations and improving efficiency. Comparing multiple modeling approaches allows selecting the most appropriate method based on performance and complexity.
 
 ## Potential Applications
 
-- Optimized wind farm operations and grid integration
-- Renewable energy production forecasting and capacity planning
-- Strategic decision-making in real-time energy markets
-
-## Further Reading
-
-- [Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting](https://arxiv.org/abs/1912.09363)
-- [Gradient Clipping Techniques for Transformer-based Models](https://paperswithcode.com/method/gradient-clipping)
-
+- Wind farm operational optimization
+- Energy production scheduling and forecasting
+- Decision-making support in energy markets
