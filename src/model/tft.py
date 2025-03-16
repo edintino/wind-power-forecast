@@ -16,7 +16,15 @@ class LearnablePositionalEncoding(nn.Module):
 
 class TFTModel(nn.Module):
     """
-    Enhanced Temporal Fusion Transformer for sequence forecasting.
+    Temporal Fusion Transformer model for sequence forecasting.
+
+    Args:
+        input_size (int): Number of input features.
+        hidden_size (int): Transformer hidden layer dimension.
+        output_size (int): Output dimension.
+        num_heads (int): Number of attention heads.
+        num_layers (int): Number of transformer encoder layers.
+        dropout (float, optional): Dropout rate. Defaults to 0.1.
     """
     def __init__(self, input_size, hidden_size, output_size, num_heads, num_layers, dropout=0.1):
         super().__init__()

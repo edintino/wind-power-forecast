@@ -5,8 +5,13 @@ logger = logging.getLogger(__name__)
 
 class LSTMModel(nn.Module):
     """
-    A simple LSTM model for time-series forecasting, returning a single-step prediction.
-    Uses the same input shape as your TFT: (batch_size, seq_length, num_features + 1).
+    LSTM-based neural network for time-series forecasting.
+
+    Args:
+        input_size (int): Number of features.
+        hidden_size (int, optional): Hidden state dimension. Defaults to 64.
+        num_layers (int, optional): Number of LSTM layers. Defaults to 1.
+        dropout (float, optional): Dropout probability. Defaults to 0.0.
     """
     def __init__(self, input_size, hidden_size=64, num_layers=1, dropout=0.0):
         super().__init__()
